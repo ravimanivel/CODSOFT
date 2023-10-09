@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .calculator {
+            background-color: blue;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 500px;
+            font-family: Arial, sans-serif;
+        }
+
+        .display {
+            background-color:blue;
+            color: #fff;
+            font-size: 24px;
+            text-align: right;
+            padding: 10px;
+            line-height: 1.5;
+            height: 60px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .btn {
+            background-color: white;
+            color: black;
+	    font-weight:bold;
+	    border-radius:15px;
+            font-size: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+	<h1 style="color:white; text-align:center;"> CALCULATOR FOR CODSOFT</h1> 
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn" id="9">9</button>
+            <button class="btn" id="8">8</button>
+            <button class="btn" id="7">7</button>
+            <button class="btn" id="clear">C</button>
+            <button class="btn" id="6">6</button>
+            <button class="btn" id="5">5</button>
+            <button class="btn" id="4">4</button>
+            <button class="btn" id="multiply">*</button>
+            <button class="btn" id="3">3</button>
+            <button class="btn" id="2">2</button>
+            <button class="btn" id="1">1</button>
+            <button class="btn" id="divide">/</button>
+            <button class="btn" id="0">0</button>
+            <button class="btn" id="decimal">.</button>
+            <button class="btn" id="subtract">-</button>
+            <button class="btn" id="add">+</button>
+            <button class="btn" id="equals">=</button>
+        </div>
+	<h4 style="color:white; text-align:center;"> developed by <a href ="https://www.linkedin.com/posts/ravi-manivel-87887a254_webdevelopment-internship-codsoft-activity-7117080768333406208-LXdS?utm_source=share&utm_medium=member_desktop" style="color:white;">RAVI</a></h4>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const display = document.getElementById("display");
+            const clearBtn = document.getElementById("clear");
+            const equalsBtn = document.getElementById("equals");
+            const decimalBtn = document.getElementById("decimal");
+
+            let currentValue = "";
+            let currentOperator = "";
+            let previousValue = "";
+
+            function updateDisplay() {
+                if (currentOperator) {
+                    display.textContent = `${previousValue} ${currentOperator} ${currentValue}`;
+                } else {
+                    display.textContent = currentValue;
+                }
+            }
+
+            function clear() {
+                currentValue = "";
+                currentOperator = "";
+                previousValue = "";
+                updateDisplay();
+            }
+
+            function handleNumberClick(number) {
+                if (currentValue === "0" || currentValue === "-0") {
+                    currentValue = number;
+                } else {
+                    currentValue += number;
+                }
+                updateDisplay();
+            }
+
+            function handleOperatorClick(operator) {
+                if (currentOperator) {
+                    evaluate();
+                }
+                currentOperator = operator;
+                previousValue = currentValue;
+                currentValue = "";
+                updateDisplay();
+            }
+
+            function evaluate() {
+                if (currentOperator && previousValue !== "" && currentValue !== "") {
+                    switch (currentOperator) {
+                        case "+":
+                            currentValue = (parseFloat(previousValue) + parseFloat(currentValue)).toString();
+                            break;
+                        case "-":
+                            currentValue = (parseFloat(previousValue) - parseFloat(currentValue)).toString();
+                            break;
+                        case "*":
+                            currentValue = (parseFloat(previousValue) * parseFloat(currentValue)).toString();
+                            break;
+                        case "/":
+                            if (currentValue === "0") {
+                                currentValue = "Error";
+                            } else {
+                                currentValue = (parseFloat(previousValue) / parseFloat(currentValue)).toString();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    currentOperator = "";
+                    previousValue = "";
+                    updateDisplay();
+                }
+            }
+
+            clearBtn.addEventListener("click", clear);
+
+            equalsBtn.addEventListener("click", () => {
+                evaluate();
+            });
+
+            decimalBtn.addEventListener("click", () => {
+                if (!currentValue.includes(".")) {
+                    currentValue += ".";
+                }
+                updateDisplay();
+            });
+
+            const numberButtons = document.querySelectorAll(".btn[id^='1'], .btn[id^='2'], .btn[id^='3'], .btn[id^='4'], .btn[id^='5'], .btn[id^='6'], .btn[id^='7'], .btn[id^='8'], .btn[id^='9'], .btn[id='0']");
+            numberButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    handleNumberClick(button.textContent);
+                });
+            });
+
+            const operatorButtons = document.querySelectorAll(".btn[id='add'], .btn[id='subtract'], .btn[id='multiply'], .btn[id='divide']");
+            operatorButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    handleOperatorClick(button.textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
